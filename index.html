@@ -64,7 +64,7 @@ div.innerText=board.name
 
 div.onclick=()=>{
 
-window.open("https://excalidraw.com/#room="+board.id,"_blank")
+window.open("https://excalidraw.com/#room="+board.id+","+board.key,"_blank")
 
 }
 
@@ -83,9 +83,10 @@ if(!name) return
 let boards = JSON.parse(localStorage.getItem("boards")) || []
 
 let id="board-"+Date.now()
+let key=Math.random().toString(36).substring(2)
 
-boards.push({name,id})
-
+boards.push({name,id,key})
+  
 localStorage.setItem("boards",JSON.stringify(boards))
 
 loadBoards()

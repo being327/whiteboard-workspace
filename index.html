@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>Whiteboard Workspace</title>
 
@@ -7,6 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
+
 body{
 font-family:Arial;
 background:#f4f4f4;
@@ -34,6 +36,7 @@ border-radius:10px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 cursor:pointer;
 }
+
 </style>
 </head>
 
@@ -53,11 +56,11 @@ cursor:pointer;
 
 const firebaseConfig = {
 apiKey: "AIzaSyCj4Gu_GtOfZKqZ_ig3mhDs0viUbOnwtQ8",
-  authDomain: "whiteboard-cloud-54238.firebaseapp.com",
-  projectId: "whiteboard-cloud-54238",
-  storageBucket: "whiteboard-cloud-54238.firebasestorage.app",
-  messagingSenderId: "337433152259",
-  appId: "1:337433152259:web:28e38ff06ea95738e53736"
+authDomain: "whiteboard-cloud-54238.firebaseapp.com",
+projectId: "whiteboard-cloud-54238",
+storageBucket: "whiteboard-cloud-54238.firebasestorage.app",
+messagingSenderId: "337433152259",
+appId: "1:337433152259:web:28e38ff06ea95738e53736"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -81,16 +84,15 @@ div.innerText=data.name;
 
 div.onclick=function(){
 
-localStorage.setItem("boardId",data.id);
-window.location="board.html";
+window.open("board.html?id="+data.id,"_blank");
 
-}
+};
 
 container.appendChild(div);
 
-})
+});
 
-})
+});
 
 }
 

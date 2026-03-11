@@ -4,28 +4,17 @@
 
 <title>Whiteboard Workspace</title>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <style>
 
 body{
 font-family:Arial;
 background:#f4f4f4;
-margin:0;
 text-align:center;
 }
 
 .container{
 max-width:700px;
 margin:auto;
-padding:20px;
-}
-
-button{
-padding:10px 20px;
-font-size:16px;
-margin-bottom:20px;
 }
 
 .board{
@@ -37,6 +26,12 @@ box-shadow:0 2px 6px rgba(0,0,0,0.1);
 cursor:pointer;
 }
 
+button{
+padding:10px 20px;
+margin:20px;
+font-size:16px;
+}
+
 </style>
 
 </head>
@@ -45,61 +40,35 @@ cursor:pointer;
 
 <h2>My Whiteboard Workspace</h2>
 
-<div class="container">
-
 <button onclick="createBoard()">Create Project</button>
 
-<div id="boards"></div>
-
-</div>
+<div id="boards" class="container"></div>
 
 <script>
 
-const firebaseConfig = {
-  const firebaseConfig = {
-  apiKey: "AIzaSyCj4Gu_GtOfZKqZ_ig3mhDs0viUbOnwtQ8",
-  authDomain: "whiteboard-cloud-54238.firebaseapp.com",
-  projectId: "whiteboard-cloud-54238",
-  storageBucket: "whiteboard-cloud-54238.firebasestorage.app",
-  messagingSenderId: "337433152259",
-  appId: "1:337433152259:web:28e38ff06ea95738e53736"
-};
-,
-};
-
-firebase.initializeApp(firebaseConfig)
-
-const db = firebase.firestore()
-
 function loadBoards(){
 
-db.collection("boards").onSnapshot(snapshot=>{
+let boards = JSON.parse(localStorage.getItem("boards")) || []
 
-const container=document.getElementById("boards")
+let container = document.getElementById("boards")
 
 container.innerHTML=""
 
-snapshot.forEach(doc=>{
-
-const data=doc.data()
+boards.forEach(board=>{
 
 let div=document.createElement("div")
 
 div.className="board"
 
-div.innerText=data.name
+div.innerText=board.name
 
-div.onclick=function(){
+div.onclick=()=>{
 
-localStorage.setItem("boardId",data.id)
-
-window.location="board.html"
+window.open("https://excalidraw.com/#room="+board.id,"_blank")
 
 }
 
 container.appendChild(div)
-
-})
 
 })
 
@@ -111,14 +80,15 @@ let name=prompt("Project name")
 
 if(!name) return
 
+let boards = JSON.parse(localStorage.getItem("boards")) || []
+
 let id="board-"+Date.now()
 
-db.collection("boards").add({
+boards.push({name,id})
 
-name:name,
-id:id
+localStorage.setItem("boards",JSON.stringify(boards))
 
-})
+loadBoards()
 
 }
 

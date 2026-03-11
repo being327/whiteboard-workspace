@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Whiteboard</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+}
+
+#app{
+height:100vh;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<script>
+
+// 🔴 PASTE SAME FIREBASE CONFIG HERE
+
+const firebaseConfig = {
+apiKey: "PASTE",
+authDomain: "PASTE",
+projectId: "PASTE",
+storageBucket: "PASTE",
+messagingSenderId: "PASTE",
+appId: "PASTE"
+};
+
+firebase.initializeApp(firebaseConfig)
+
+const db = firebase.firestore()
+
+const boardId = localStorage.getItem("currentBoard")
+
+let initialData = null
+
+async function loadData(){
+
+const doc = await db.collection("drawings").doc(boardId).get()
+
+if(doc.exists){
+
+initialData = doc.data().data
+
+}
+
+start()
+
+}
+
+function start(){
+
+const excalidraw = Excalidraw.create({
+
+container:document.getElementById("app"),
+
+initialData:initialData,
+
+onChange:(elements,state)=>{
+
+db.collection("drawings").doc(boardId).set({
+
+data:{elements,state}
+
+})
+
+}
+
+})
+
+}
+
+loadData()
+
+</script>
+
+</body>
+
+</html>

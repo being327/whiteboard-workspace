@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>My Whiteboards</title>
+<title>Whiteboard Workspace</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
 
 body{
 font-family:Arial;
 background:#f4f4f4;
+margin:0;
+}
+
+header{
+background:#222;
+color:white;
+padding:15px;
 text-align:center;
 }
 
 .container{
-max-width:700px;
+max-width:800px;
 margin:auto;
-}
-
-.board{
-background:white;
-padding:15px;
-margin:10px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-cursor:pointer;
+padding:20px;
 }
 
 button{
 padding:10px 20px;
 font-size:16px;
-margin:20px;
+margin-bottom:20px;
+}
+
+.board{
+background:white;
+padding:15px;
+margin-bottom:10px;
+border-radius:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+cursor:pointer;
+}
+
+.board:hover{
+background:#fafafa;
 }
 
 </style>
@@ -38,33 +54,60 @@ margin:20px;
 
 <body>
 
-<h1>My Whiteboard Workspace</h1>
+<header>
 
-<button onclick="createBoard()">+ Create New Project</button>
+<h2>My Whiteboard Workspace</h2>
 
-<div id="boards" class="container"></div>
+</header>
+
+<div class="container">
+
+<button onclick="createBoard()">+ Create Project</button>
+
+<div id="boards"></div>
+
+</div>
 
 <script>
 
+// 🔴 PASTE YOUR FIREBASE CONFIG HERE
+
+const firebaseConfig = {
+apiKey: "PASTE",
+authDomain: "PASTE",
+projectId: "PASTE",
+storageBucket: "PASTE",
+messagingSenderId: "PASTE",
+appId: "PASTE"
+};
+
+firebase.initializeApp(firebaseConfig)
+
+const db = firebase.firestore()
+
 function loadBoards(){
 
-let boards = JSON.parse(localStorage.getItem("boards")) || []
+db.collection("boards").orderBy("created").onSnapshot(snapshot=>{
 
-let container = document.getElementById("boards")
+const container=document.getElementById("boards")
 
 container.innerHTML=""
 
-boards.forEach(board => {
+snapshot.forEach(doc=>{
 
-let div = document.createElement("div")
+const data=doc.data()
+
+let div=document.createElement("div")
 
 div.className="board"
 
-div.innerText=board.name
+div.innerText=data.name
 
-div.onclick=()=>{
+div.onclick=function(){
 
-window.location.href="https://excalidraw.com/#room="+board.id
+localStorage.setItem("currentBoard",data.id)
+
+window.location="board.html"
 
 }
 
@@ -72,23 +115,25 @@ container.appendChild(div)
 
 })
 
+})
+
 }
 
 function createBoard(){
 
-let name = prompt("Enter project name")
+let name=prompt("Enter project name")
 
 if(!name) return
 
-let id = name.toLowerCase().replace(/\s/g,"") + Date.now()
+let id="board-"+Date.now()
 
-let boards = JSON.parse(localStorage.getItem("boards")) || []
+db.collection("boards").add({
 
-boards.push({name,id})
+name:name,
+id:id,
+created:Date.now()
 
-localStorage.setItem("boards",JSON.stringify(boards))
-
-loadBoards()
+})
 
 }
 
@@ -97,4 +142,5 @@ loadBoards()
 </script>
 
 </body>
+
 </html>

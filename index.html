@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <title>Whiteboard Workspace</title>
@@ -14,17 +13,11 @@ body{
 font-family:Arial;
 background:#f4f4f4;
 margin:0;
-}
-
-header{
-background:#222;
-color:white;
-padding:15px;
 text-align:center;
 }
 
 .container{
-max-width:800px;
+max-width:700px;
 margin:auto;
 padding:20px;
 }
@@ -38,14 +31,10 @@ margin-bottom:20px;
 .board{
 background:white;
 padding:15px;
-margin-bottom:10px;
+margin:10px;
 border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 cursor:pointer;
-}
-
-.board:hover{
-background:#fafafa;
 }
 
 </style>
@@ -54,15 +43,11 @@ background:#fafafa;
 
 <body>
 
-<header>
-
 <h2>My Whiteboard Workspace</h2>
-
-</header>
 
 <div class="container">
 
-<button onclick="createBoard()">+ Create Project</button>
+<button onclick="createBoard()">Create Project</button>
 
 <div id="boards"></div>
 
@@ -70,15 +55,16 @@ background:#fafafa;
 
 <script>
 
-// 🔴 PASTE YOUR FIREBASE CONFIG HERE
-
 const firebaseConfig = {
-apiKey: "PASTE",
-authDomain: "PASTE",
-projectId: "PASTE",
-storageBucket: "PASTE",
-messagingSenderId: "PASTE",
-appId: "PASTE"
+  const firebaseConfig = {
+  apiKey: "AIzaSyCj4Gu_GtOfZKqZ_ig3mhDs0viUbOnwtQ8",
+  authDomain: "whiteboard-cloud-54238.firebaseapp.com",
+  projectId: "whiteboard-cloud-54238",
+  storageBucket: "whiteboard-cloud-54238.firebasestorage.app",
+  messagingSenderId: "337433152259",
+  appId: "1:337433152259:web:28e38ff06ea95738e53736"
+};
+,
 };
 
 firebase.initializeApp(firebaseConfig)
@@ -87,7 +73,7 @@ const db = firebase.firestore()
 
 function loadBoards(){
 
-db.collection("boards").orderBy("created").onSnapshot(snapshot=>{
+db.collection("boards").onSnapshot(snapshot=>{
 
 const container=document.getElementById("boards")
 
@@ -105,7 +91,7 @@ div.innerText=data.name
 
 div.onclick=function(){
 
-localStorage.setItem("currentBoard",data.id)
+localStorage.setItem("boardId",data.id)
 
 window.location="board.html"
 
@@ -121,7 +107,7 @@ container.appendChild(div)
 
 function createBoard(){
 
-let name=prompt("Enter project name")
+let name=prompt("Project name")
 
 if(!name) return
 
@@ -130,8 +116,7 @@ let id="board-"+Date.now()
 db.collection("boards").add({
 
 name:name,
-id:id,
-created:Date.now()
+id:id
 
 })
 
@@ -142,5 +127,4 @@ loadBoards()
 </script>
 
 </body>
-
 </html>

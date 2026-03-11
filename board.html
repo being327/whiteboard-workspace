@@ -26,8 +26,7 @@ border:none;
 const params = new URLSearchParams(window.location.search);
 
 const id = params.get("id");
-
-const key = Math.random().toString(36).substring(2);
+const key = params.get("key");
 
 document.getElementById("boardFrame").src =
 "https://excalidraw.com/#room="+id+","+key;

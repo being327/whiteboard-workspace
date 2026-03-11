@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>My Whiteboards</title>
 
 <style>
@@ -12,45 +13,88 @@ text-align:center;
 }
 
 .container{
-max-width:600px;
+max-width:700px;
 margin:auto;
 }
 
 .board{
 background:white;
-margin:15px;
-padding:20px;
+padding:15px;
+margin:10px;
 border-radius:10px;
 box-shadow:0 2px 5px rgba(0,0,0,0.1);
+cursor:pointer;
 }
 
-a{
-text-decoration:none;
-font-size:18px;
+button{
+padding:10px 20px;
+font-size:16px;
+margin:20px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h1>My Whiteboard Projects</h1>
+<h1>My Whiteboard Workspace</h1>
 
-<div class="container">
+<button onclick="createBoard()">+ Create New Project</button>
 
-<div class="board">
-<a href="https://excalidraw.com/#room=startup">Startup Ideas</a>
-</div>
+<div id="boards" class="container"></div>
 
-<div class="board">
-<a href="https://excalidraw.com/#room=systemdesign">System Design</a>
-</div>
+<script>
 
-<div class="board">
-<a href="https://excalidraw.com/#room=notes">Notes</a>
-</div>
+function loadBoards(){
 
-</div>
+let boards = JSON.parse(localStorage.getItem("boards")) || []
+
+let container = document.getElementById("boards")
+
+container.innerHTML=""
+
+boards.forEach(board => {
+
+let div = document.createElement("div")
+
+div.className="board"
+
+div.innerText=board.name
+
+div.onclick=()=>{
+
+window.location.href="https://excalidraw.com/#room="+board.id
+
+}
+
+container.appendChild(div)
+
+})
+
+}
+
+function createBoard(){
+
+let name = prompt("Enter project name")
+
+if(!name) return
+
+let id = name.toLowerCase().replace(/\s/g,"") + Date.now()
+
+let boards = JSON.parse(localStorage.getItem("boards")) || []
+
+boards.push({name,id})
+
+localStorage.setItem("boards",JSON.stringify(boards))
+
+loadBoards()
+
+}
+
+loadBoards()
+
+</script>
 
 </body>
 </html>

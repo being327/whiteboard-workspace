@@ -2,90 +2,35 @@
 <html>
 
 <head>
-
-<title>Whiteboard</title>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
+<title>Board</title>
 
 <style>
-
 body{
 margin:0;
 }
-
-#app{
+iframe{
+width:100%;
 height:100vh;
+border:none;
 }
-
 </style>
 
 </head>
 
 <body>
 
-<div id="app"></div>
+<iframe id="boardFrame"></iframe>
 
 <script>
 
-// 🔴 PASTE SAME FIREBASE CONFIG HERE
+const params = new URLSearchParams(window.location.search);
 
-const firebaseConfig = {
-apiKey: "AIzaSyCj4Gu_GtOfZKqZ_ig3mhDs0viUbOnwtQ8",
-  authDomain: "whiteboard-cloud-54238.firebaseapp.com",
-  projectId: "whiteboard-cloud-54238",
-  storageBucket: "whiteboard-cloud-54238.firebasestorage.app",
-  messagingSenderId: "337433152259",
-  appId: "1:337433152259:web:28e38ff06ea95738e53736"
-};
+const id = params.get("id");
 
-firebase.initializeApp(firebaseConfig)
+const key = Math.random().toString(36).substring(2);
 
-const db = firebase.firestore()
-
-const boardId = localStorage.getItem("currentBoard")
-
-let initialData = null
-
-async function loadData(){
-
-const doc = await db.collection("drawings").doc(boardId).get()
-
-if(doc.exists){
-
-initialData = doc.data().data
-
-}
-
-start()
-
-}
-
-function start(){
-
-const excalidraw = Excalidraw.create({
-
-container:document.getElementById("app"),
-
-initialData:initialData,
-
-onChange:(elements,state)=>{
-
-db.collection("drawings").doc(boardId).set({
-
-data:{elements,state}
-
-})
-
-}
-
-})
-
-}
-
-loadData()
+document.getElementById("boardFrame").src =
+"https://excalidraw.com/#room="+id+","+key;
 
 </script>
 
